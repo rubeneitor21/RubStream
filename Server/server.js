@@ -2,6 +2,7 @@ import * as fs from 'fs'
 import path from 'path'
 import * as url from 'url'
 import * as http from 'http'
+import os from 'os'
 
 
 import RubLogger from './Modules/RubLogger.js'
@@ -28,7 +29,14 @@ const server = http.createServer((req, res) => {
         const file = req.url.split('/')
         file.splice(0, 2)
 
-        const videoPath = path.resolve(`${__dirname}Media/${file[0]}/${file[1]}`)
+        let finalFile = ""
+        file.forEach(route => finalFile += `${route}/`)
+        finalFile = decodeURI(finalFile)
+
+        const videoPath = path.resolve(`${__dirname}Media/${finalFile}`)
+
+        logger.info(videoPath)
+        logger.info(finalFile)
 
         // logger.info(videoPath)
 
@@ -52,24 +60,38 @@ const server = http.createServer((req, res) => {
     /* -------------------------------------------------------------------------- */
 
     else if (req.url.startsWith("/list/")) {
-        let type = req.url.split("/")[2]
-        // logger.info(type)
+        let args = decodeURI(req.url).split("/")
+        args.splice(0, 2)
+        // logger.info(args)
+        let search = ""
+
+        args.forEach(arg => search += `${arg}/`)
+
+        search = search.replace(/\/\//g, "/")
+
         let movies = []
-        fs.readdir(path.resolve(`${__dirname}Media/${type}`), (err, content) => {
+
+        fs.readdir(path.resolve(`${__dirname}Media/${search}`), (err, content) => {
             if (err) {
-                res.writeHead(500, { "Content-Type": "text/plain" })
-                res.end("Error reading files")
+                res.writeHead(404, { "Content-Type": "text/plain" })
+                res.end("Not found")
             }
 
-            content.forEach(movie => {
-                movies.push({
-                    "name": movie.replace(/\.\w{0,4}/g, ""),
-                    "url": `/media/${type}/${movie}`
+            else {
+                content.forEach(movie => {
+                    let type = movie.match(/\.\w{0,4}/) ? "file" : "folder"
+                    let url = `/media/${search}/${movie}`.replace(/\/\//g, "/")
+                    movies.push({
+                        "name": movie.replace(/\.\w{0,4}/g, ""),
+                        "url": url,
+                        "type": type
+                    })
                 })
-            })
 
-            res.writeHead(200, { "Content-Type": "application/json" })
-            res.end(JSON.stringify(movies))
+
+                res.writeHead(200, { "Content-Type": "application/json" })
+                res.end(JSON.stringify(movies))
+            }
         })
 
     }
@@ -77,5 +99,5 @@ const server = http.createServer((req, res) => {
 
 const PORT = 3000;
 server.listen(PORT, () => {
-    logger.info(`Servidor listo en: ${PORT}`)
+    logger.info(`Servidor listo en: http://localhost:${PORT}`)
 });
