@@ -11,16 +11,21 @@ const __dirname = url.fileURLToPath(new URL('.', import.meta.url))
 const logger = new RubLogger(__dirname)
 
 if (!fs.existsSync(__dirname + "install.lock")) {
-    logger.info("Instalando")
+    logger.info("Instalando...")
     fs.mkdirSync(__dirname + "Media/")
     fs.mkdirSync(__dirname + "Media/" + "movies")
     fs.mkdirSync(__dirname + "Media/" + "shows")
+    logger.info("Los nombres de las carpetas pueden ser modificados")
     fs.writeFileSync(__dirname + "install.lock", "")
 }
 
 
 const server = http.createServer((req, res) => {
 
+    res.setHeader('Access-Control-Allow-Origin', '*'); // Permite solicitudes desde cualquier origen
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Permite encabezados específicos
+
+    logger.info(req.url)
     /* -------------------------------------------------------------------------- */
     /*                                 Load media                                 */
     /* -------------------------------------------------------------------------- */
@@ -59,7 +64,7 @@ const server = http.createServer((req, res) => {
     /*                                 List media                                 */
     /* -------------------------------------------------------------------------- */
 
-    else if (req.url.startsWith("/list/")) {
+    else if (req.url.startsWith("/list")) {
         let args = decodeURI(req.url).split("/")
         args.splice(0, 2)
         // logger.info(args)
@@ -67,7 +72,7 @@ const server = http.createServer((req, res) => {
 
         args.forEach(arg => search += `${arg}/`)
 
-        search = search.replace(/\/\//g, "/")
+        search = search.replace(/\/+/g, "/")
 
         let movies = []
 
@@ -80,10 +85,10 @@ const server = http.createServer((req, res) => {
             else {
                 content.forEach(movie => {
                     let type = movie.match(/\.\w{0,4}/) ? "file" : "folder"
-                    let url = `/media/${search}/${movie}`.replace(/\/\//g, "/")
+                    let url = `/media/${search}/${movie}`.replace(/\/+/g, "/")
                     movies.push({
                         "name": movie.replace(/\.\w{0,4}/g, ""),
-                        "url": url,
+                        "url": type === "folder" ? url.replace("media/", "").replace(/^\//, "") : url,
                         "type": type
                     })
                 })
@@ -91,13 +96,14 @@ const server = http.createServer((req, res) => {
 
                 res.writeHead(200, { "Content-Type": "application/json" })
                 res.end(JSON.stringify(movies))
+                console.log(movies)
             }
         })
 
     }
 });
 
-const PORT = 3000;
+const PORT = 5000;
 server.listen(PORT, () => {
     logger.info(`Servidor listo en: http://localhost:${PORT}`)
 });

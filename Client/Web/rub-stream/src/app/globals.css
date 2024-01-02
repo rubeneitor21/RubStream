@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --accent: #c52233;
+  --details: #9999c3;
+  --background: #03012c;
+}
+
+.bg-accent {
+  background-color: var(--accent);
+}
+
+.bg-details {
+  background-color: var(--details);
+}
+
+.bg-background {
+ background-color: var(--background);
+}
+
+.text-accent {
+  color: var(--accent);
+}
+
+.text-details {
+  color: var(--details);
+}
+
+.text-background {
+  color: var(--background);
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+}
