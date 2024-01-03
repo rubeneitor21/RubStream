@@ -3,12 +3,14 @@ import path from 'path'
 import * as url from 'url'
 import * as http from 'http'
 import os from 'os'
+import mime from 'mime-types'
 
 
 import RubLogger from './Modules/RubLogger.js'
 
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url))
 const logger = new RubLogger(__dirname)
+
 
 if (!fs.existsSync(__dirname + "install.lock")) {
     logger.info("Instalando...")
@@ -52,7 +54,7 @@ const server = http.createServer((req, res) => {
         }
 
         res.writeHead(200, {
-            'Content-Type': 'video/mp4',
+            'Content-Type': `${mime.lookup(videoPath)}`,
             'Content-Length': fs.statSync(videoPath).size,
         });
 

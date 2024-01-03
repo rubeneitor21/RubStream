@@ -24,12 +24,48 @@
   color: var(--accent);
 }
 
+.border-accent {
+  border-color: var(--accent);
+}
+
+.hover:border-accent {
+  border-color: var(--accent);
+}
+
 .text-details {
   color: var(--details);
+}
+.border-details {
+  border-color: var(--details);
 }
 
 .text-background {
   color: var(--background);
+}
+
+.border-background {
+  border-color: var(--background);
+}
+
+.grid-min-max {
+  grid-template-columns: repeat(3, minmax(0, 4fr));
+  /* background-color: #c52233; */
+}
+
+.animation-enter {
+  animation-name: fadeIn;
+  animation-timing-function: ease-in;
+  animation-fill-mode: forwards;
+  animation-duration: 500ms;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 body {
