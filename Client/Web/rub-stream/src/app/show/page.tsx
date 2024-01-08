@@ -6,7 +6,6 @@ export default function Show() {
     let time = 0
     if (videoInfo?.name === videoTime?.name) {
         time = videoTime.time
-        console.log(time)
     }
     return (
         <main className="bg-background">
@@ -16,11 +15,9 @@ export default function Show() {
                     "name": videoInfo.name,
                     "time": video.currentTime
                 }))
-                console.log("updating time")
             }} onPlay={() => {
                 const video = document.querySelector("video") as HTMLVideoElement
                 video.currentTime = time
-                console.log(video.currentTime)
             }}></video>
         </main>
     )
