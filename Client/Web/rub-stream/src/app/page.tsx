@@ -2,13 +2,15 @@
 
 import Image from 'next/image'
 import { useEffect, useState, useRef } from 'react'
+// import { useRouter } from 'next/navigation'
 
 import Folder from './components/Folder'
-import { get } from 'http'
+import Video from './components/Video'
 
 export default function Home() {
 
   const [items, setItems] = useState([] as any)
+  // const router = useRouter()
   const route = useRef("")
   // const lastRoute = useRef("")
 
@@ -46,7 +48,7 @@ export default function Home() {
       ))}
 
       {items.map((item: any, i: any) => (
-        item.type == "file" ? <div key={i} className='text-white cursor-pointer'>{item.name}</div> : <></>
+        item.type == "file" ? <Video key={i} href={item.url} name={item.name} /> : <></>
       ))}
 
     </main>
