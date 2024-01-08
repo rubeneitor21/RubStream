@@ -4,7 +4,11 @@ import * as url from 'url'
 import * as http from 'http'
 import os from 'os'
 import mime from 'mime-types'
+import child from 'child_process'
 
+console.log(process.argv)
+
+const env = process.argv[2] || "production"
 
 import RubLogger from './Modules/RubLogger.js'
 
@@ -14,10 +18,12 @@ const logger = new RubLogger(__dirname)
 
 if (!fs.existsSync(__dirname + "install.lock")) {
     logger.info("Instalando...")
+    logger.info("Los nombres de las carpetas pueden ser modificados")
     fs.mkdirSync(__dirname + "Media/")
     fs.mkdirSync(__dirname + "Media/" + "movies")
     fs.mkdirSync(__dirname + "Media/" + "shows")
-    logger.info("Los nombres de las carpetas pueden ser modificados")
+    logger.info("Instalando cliente...")
+    child.execSync("cd ./Client/Web/rub-stream/ && npm i && npm run build")
     fs.writeFileSync(__dirname + "install.lock", "")
 }
 
@@ -108,4 +114,22 @@ const server = http.createServer((req, res) => {
 const PORT = 5000;
 server.listen(PORT, () => {
     logger.info(`Servidor listo en: http://localhost:${PORT}`)
+    logger.info("Lanzando Cliente...")
+    if (env == "dev") {
+        let client = child.exec("cd ./Client/Web/rub-stream/ && npm run dev")
+
+        client.stdout.on("data", data => {
+            logger.info(data.toString())
+        })
+
+    }
+    if (env == "production") {
+        let client = child.exec("cd ./Client/Web/rub-stream/ && npm run start")
+
+        client.stdout.on("data", data => {
+            logger.info(data.toString())
+        })
+    }
+
 });
+
