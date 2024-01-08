@@ -119,7 +119,7 @@ server.listen(PORT, () => {
         let client = child.exec("cd ./Client/Web/rub-stream/ && npm run dev")
 
         client.stdout.on("data", data => {
-            logger.info(data.toString())
+            logger.info("Client: " + data.toString())
         })
 
     }
@@ -127,7 +127,7 @@ server.listen(PORT, () => {
         let client = child.exec("cd ./Client/Web/rub-stream/ && npm run start")
 
         client.stdout.on("data", data => {
-            logger.info(data.toString())
+            logger.info("Client: " + data.toString())
         })
     }
 
