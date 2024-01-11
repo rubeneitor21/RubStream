@@ -6,8 +6,6 @@ import os from 'os'
 import mime from 'mime-types'
 import child from 'child_process'
 
-console.log(process.argv)
-
 const env = process.argv[2] || "production"
 
 import RubLogger from './Modules/RubLogger.js'
@@ -30,8 +28,8 @@ if (!fs.existsSync(__dirname + "install.lock")) {
 
 const server = http.createServer((req, res) => {
 
-    res.setHeader('Access-Control-Allow-Origin', '*'); // Permite solicitudes desde cualquier origen
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Permite encabezados específicos
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
     logger.info(req.url)
     /* -------------------------------------------------------------------------- */
@@ -104,7 +102,6 @@ const server = http.createServer((req, res) => {
 
                 res.writeHead(200, { "Content-Type": "application/json" })
                 res.end(JSON.stringify(movies))
-                // console.log(movies)
             }
         })
 

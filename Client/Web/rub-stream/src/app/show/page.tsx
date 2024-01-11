@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react"
 
-
 export default function Show() {
     const [videoInfo, setVideoInfo] = useState({} as any)
     const [videoTime, setVideoTime] = useState({} as any)
@@ -14,6 +13,31 @@ export default function Show() {
         if (info?.name === time?.name) {
             setVideoTime(time)
         }
+        // document.addEventListener("keydown", e => {
+        //     const $video = document.querySelector("video") as HTMLVideoElement
+        //     if (e.key == "k") {
+        //         if ($video.paused) {
+        //             $video.play()
+        //             $video.currentTime = JSON.parse(localStorage.getItem("current") || "{}")?.time || 0
+        //         }
+        //         else {
+        //             $video.pause()
+        //         }
+        //     }
+        //     else if (e.key == "ArrowLeft" || e.key == "j") {
+        //         if ($video.currentTime - 5 >= 0) {
+        //             $video.currentTime -= 5
+        //         }
+        //         else {
+        //             $video.currentTime -= 5
+        //         }
+        //     }
+        //     else if (e.key == "ArrowRight" || e.key == "l") {
+        //         console.log($video.currentTime)
+        //         $video.currentTime = $video.currentTime + 5
+        //         console.log($video.currentTime)
+        //     }
+        // })
     }, [])
 
     return (
@@ -27,7 +51,8 @@ export default function Show() {
             }} onPlay={() => {
                 const video = document.querySelector("video") as HTMLVideoElement
                 video.currentTime = videoTime.time
-            }}></video>
+            }}>
+            </video>
         </main>
     )
 }
