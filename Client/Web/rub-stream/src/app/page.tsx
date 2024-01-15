@@ -2,12 +2,18 @@
 
 import Image from 'next/image'
 import { useEffect, useState, useRef } from 'react'
+import fs from 'fs'
 // import { useRouter } from 'next/navigation'
 
 import Folder from './components/Folder'
 import Video from './components/Video'
 
+import json from '../../public/address.json'
+
+
+
 export default function Home() {
+
 
   const [items, setItems] = useState([] as any)
   // const router = useRouter()
@@ -16,8 +22,9 @@ export default function Home() {
 
   useEffect(() => {
     async function getItems(route: string) {
+
       console.log(route)
-      let retrieveItems = await (await fetch(`http://localhost:5000/list/${route}`)).json()
+      let retrieveItems = await (await fetch(`http://${json.ip}:5000/list/${route}`)).json()
 
       console.log(retrieveItems)
       setItems(retrieveItems)
